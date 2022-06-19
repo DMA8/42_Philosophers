@@ -5,19 +5,16 @@
 #                                                     +:+ +:+         +:+      #
 #    By: syolando <syolando@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/05/21 01:52:10 by syolando          #+#    #+#              #
-#    Updated: 2022/05/30 01:37:40 by syolando         ###   ########.fr        #
+#    Created: 2022/06/19 20:36:06 by syolando          #+#    #+#              #
+#    Updated: 2022/06/19 20:38:59 by syolando         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC	=	philo_bonus.c\
-		inits_bonus.c\
-		lifecycle_bonus.c\
-		timefuncs_bonus.c\
-		print_bonus.c\
-		kill_processes_bonus.c\
-		validation_bonus/validate_inputs_bonus.c\
-		validation_bonus/utils_bonus.c\
+		inits.c\
+		lifecycle.c\
+		philo_utils.c\
+		utils.c\
 
 
 OBJ = $(SRC:.c=.o)

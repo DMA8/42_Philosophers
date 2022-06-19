@@ -5,31 +5,78 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: syolando <syolando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/29 23:31:54 by syolando          #+#    #+#             */
-/*   Updated: 2022/05/30 01:46:18 by syolando         ###   ########.fr       */
+/*   Created: 2022/06/19 20:33:22 by syolando          #+#    #+#             */
+/*   Updated: 2022/06/19 21:02:48 by syolando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-#include <stdlib.h>
-#include <stdio.h>
 
-int	main(int argc, char **argv)
+static int arguments_checker(int argc, char **argv)
 {
-	t_overall	*all;
+	size_t i;
+	int tmp;
 
-	if (!validate_inputs(argc, argv))
+	if (argc < 5 || argc > 6)
 	{
-		write(2, "bad input\n", 10);
-		exit(1);
+		print_error("Usage: ", NULL, USAGE_MSG, -1);
+		return (EXIT_FAILURE);
 	}
-	all = init_overall(argv, argc);
-	if (!all)
+	i = 1;
+	while (argv[i])
 	{
-		write(2, "init failure\n", 13);
-		exit(1);
+		if (!ft_str_isdigit(argv[i]) || ft_atoi_is_overflow(argv[i], &tmp) || tmp == 0)
+		{
+			print_error(NULL, argv[i], NULL, EINVAL);
+			return (EXIT_FAILURE);
+		}
+		i++;
 	}
-	all->start_time = get_time();
-	start_philo(all);
-	return (0);
+	return (EXIT_SUCCESS);
+}
+
+static void kill_philosophers(t_overall *data)
+{
+	size_t i;
+
+	i = 0;
+	while (i < data->n_philos)
+	{
+		kill(data->pid_philo[i], SIGKILL);
+		i++;
+	}
+}
+
+static void free_data(t_overall *data)
+{
+	free(data->pid_philo);
+	if (sem_close(data->forks))
+		print_error("sem_close: ", NULL, NULL, EINVAL);
+	if (sem_close(data->speak))
+		print_error("sem_close: ", NULL, NULL, EINVAL);
+	if (sem_close(data->stop))
+		print_error("sem_close: ", NULL, NULL, EINVAL);
+	if (data->n_suppers_goal && sem_close(data->repletion))
+		print_error("sem_close: ", NULL, NULL, EINVAL);
+}
+
+int main(int argc, char **argv)
+{
+	t_overall data;
+
+	if (arguments_checker(argc, argv) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (init_data(&data, argv) == EXIT_FAILURE)
+	{
+		free_data(&data);
+		return (EXIT_FAILURE);
+	}
+	if (start_philosopher(&data) == EXIT_FAILURE)
+	{
+		free_data(&data);
+		return (EXIT_FAILURE);
+	}
+	kill_philosophers(&data);
+	free_data(&data);
+	return (EXIT_SUCCESS);
 }
