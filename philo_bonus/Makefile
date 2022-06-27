@@ -6,7 +6,7 @@
 #    By: syolando <syolando@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/19 20:36:06 by syolando          #+#    #+#              #
-#    Updated: 2022/06/19 20:38:59 by syolando         ###   ########.fr        #
+#    Updated: 2022/06/28 02:21:32 by syolando         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRC	=	philo_bonus.c\
 OBJ = $(SRC:.c=.o)
 NAME = philo_bonus
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -pthread
+CFLAGS = -Wall -Werror -Wextra -pthread# -fsanitize=thread -g
 HEADER = philo_bonus.h
 
 all: $(NAME)

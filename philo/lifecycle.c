@@ -6,7 +6,7 @@
 /*   By: syolando <syolando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 01:52:02 by syolando          #+#    #+#             */
-/*   Updated: 2022/06/18 22:43:10 by syolando         ###   ########.fr       */
+/*   Updated: 2022/06/27 20:08:33 by syolando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,21 +96,21 @@ static void *routine(void *arg)
 	t_philo *philo;
 
 	philo = arg;
-	if (philo->number % 2 == 0)												  // we force everysecond philo to sleep. In order others take both forks
-		my_sleep(philo->overall_data->time_to_eat / 2L, philo->overall_data); // sleep the half of time_to_eat 2L - long type
+	if (philo->number % 2 == 0)
+		my_sleep(philo->overall_data->time_to_eat / 2L, philo->overall_data);
 	while (!philo->game_over)
 	{
 		pthread_mutex_lock(philo->left_fork); // TAKE LEFT FORK
 		philo->game_over = act(philo, TAKE_FORK);
-		if (philo->left_fork == philo->right_fork) // ???? If THEREIS ONLY ONE PHILO?
+		if (philo->left_fork == philo->right_fork)
 			break;
 		pthread_mutex_lock(philo->right_fork);							   // TAKE RIGHT FORK
 		philo->game_over = act(philo, TAKE_FORK);						   // PRINT TAKEFORK
 		philo->game_over = act(philo, EAT);								   // EATING
 		my_sleep(philo->overall_data->time_to_eat, philo->overall_data);   // EATING
 		philo->game_over = act(philo, SLEEP);							   // PRINT SLEEPING
-		pthread_mutex_unlock(philo->left_fork);							   // RELEASE LEFT FORK
 		pthread_mutex_unlock(philo->right_fork);						   // RELEASE RIGHT FORK
+		pthread_mutex_unlock(philo->left_fork);							   // RELEASE LEFT FORK
 		my_sleep(philo->overall_data->time_to_sleep, philo->overall_data); // HERE WE GO TO SLEEP
 		philo->game_over = act(philo, THINK);							   // PRINT THINKING
 	}
