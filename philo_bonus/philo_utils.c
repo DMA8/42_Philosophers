@@ -6,29 +6,29 @@
 /*   By: syolando <syolando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 20:34:40 by syolando          #+#    #+#             */
-/*   Updated: 2022/06/19 21:03:45 by syolando         ###   ########.fr       */
+/*   Updated: 2022/06/28 02:56:54 by syolando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-time_t get_time(void)
+time_t	get_time(void)
 {
-	struct timeval time;
+	struct timeval	time;
 
 	gettimeofday(&time, NULL);
 	return (time.tv_sec * 1000L + time.tv_usec / 1000L);
 }
 
-void print_action(t_overall *data, t_philo *philo, char *action)
+void	print_action(t_overall *data, t_philo *philo, char *action)
 {
-	time_t time;
+	time_t	time;
 
 	time = get_time() - data->start_time;
 	printf("%ld %ld %s\n", time, philo->number, action);
 }
 
-void print_error(char *cmd, char *value, char *error, int status)
+void	print_error(char *cmd, char *value, char *error, int status)
 {
 	errno = status;
 	ft_putstr_fd("philo: ", STDERR_FILENO);
@@ -55,9 +55,9 @@ void print_error(char *cmd, char *value, char *error, int status)
 		ft_putstr_fd("Undefined error\n", STDERR_FILENO);
 }
 
-void my_sleep(time_t microseconds, t_overall *data)
+void	my_sleep(time_t microseconds, t_overall *data)
 {
-	time_t start;
+	time_t	start;
 
 	start = get_time();
 	while (get_time() - start < microseconds)
@@ -69,11 +69,11 @@ void my_sleep(time_t microseconds, t_overall *data)
 	}
 }
 
-char *gen_sem_name(int philo_id)
+char	*gen_sem_name(int philo_id)
 {
-	int index;
-	int tmp;
-	char *name;
+	int		index;
+	int		tmp;
+	char	*name;
 
 	index = 2;
 	tmp = philo_id;

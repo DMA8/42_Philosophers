@@ -6,7 +6,7 @@
 /*   By: syolando <syolando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 01:52:02 by syolando          #+#    #+#             */
-/*   Updated: 2022/06/27 20:08:33 by syolando         ###   ########.fr       */
+/*   Updated: 2022/06/28 02:46:29 by syolando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-// check_death is only thing main routine does when all philo is started.
-// set gameover if somebody is down
-static void check_death(t_overall *data)
+static void	check_death(t_overall *data)
 {
-	int i;
-	time_t time;
+	int		i;
+	time_t	time;
 
 	while (1)
 	{
@@ -32,23 +30,23 @@ static void check_death(t_overall *data)
 			{
 				print_action(&data->philo[i], "died");
 				data->game_over = 1;
-				break;
+				break ;
 			}
 			i++;
 		}
 		if (data->game_over == 1)
 		{
 			pthread_mutex_unlock(&data->voice);
-			return;
+			return ;
 		}
 		pthread_mutex_unlock(&data->voice);
 	}
 }
 
 // check_done_eating iterates through all phulos and check if they ate enough
-static int check_done_eating(t_overall *data)
+static int	check_done_eating(t_overall *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < data->n_philos)
@@ -62,7 +60,7 @@ static int check_done_eating(t_overall *data)
 }
 
 // act prints time and routine type. Returns if gameover is set.
-static int act(t_philo *philo, int action)
+static int	act(t_philo *philo, int action)
 {
 	pthread_mutex_lock(&philo->overall_data->voice);
 	if (philo->overall_data->game_over)
@@ -91,55 +89,55 @@ static int act(t_philo *philo, int action)
 }
 
 // routine is the lifecycle of philosophers
-static void *routine(void *arg)
+static void	*routine(void *arg)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = arg;
 	if (philo->number % 2 == 0)
 		my_sleep(philo->overall_data->time_to_eat / 2L, philo->overall_data);
 	while (!philo->game_over)
 	{
-		pthread_mutex_lock(philo->left_fork); // TAKE LEFT FORK
+		pthread_mutex_lock(philo->left_fork);
 		philo->game_over = act(philo, TAKE_FORK);
 		if (philo->left_fork == philo->right_fork)
-			break;
-		pthread_mutex_lock(philo->right_fork);							   // TAKE RIGHT FORK
-		philo->game_over = act(philo, TAKE_FORK);						   // PRINT TAKEFORK
-		philo->game_over = act(philo, EAT);								   // EATING
-		my_sleep(philo->overall_data->time_to_eat, philo->overall_data);   // EATING
-		philo->game_over = act(philo, SLEEP);							   // PRINT SLEEPING
-		pthread_mutex_unlock(philo->right_fork);						   // RELEASE RIGHT FORK
-		pthread_mutex_unlock(philo->left_fork);							   // RELEASE LEFT FORK
-		my_sleep(philo->overall_data->time_to_sleep, philo->overall_data); // HERE WE GO TO SLEEP
-		philo->game_over = act(philo, THINK);							   // PRINT THINKING
+			break ;
+		pthread_mutex_lock(philo->right_fork);
+		philo->game_over = act(philo, TAKE_FORK);
+		philo->game_over = act(philo, EAT);
+		my_sleep(philo->overall_data->time_to_eat, philo->overall_data);
+		philo->game_over = act(philo, SLEEP);
+		pthread_mutex_unlock(philo->right_fork);
+		pthread_mutex_unlock(philo->left_fork);
+		my_sleep(philo->overall_data->time_to_sleep, philo->overall_data);
+		philo->game_over = act(philo, THINK);
 	}
-	if (philo->left_fork == philo->right_fork) // HOW ARE INITED FORKS?
+	if (philo->left_fork == philo->right_fork)
 		pthread_mutex_unlock(philo->right_fork);
 	return (NULL);
 }
 
 // launch_philos starts philos in routines and watch if smbd down
-int launch_philos(t_overall *all)
+int	launch_philos(t_overall *all)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	all->start_time = get_time(); // starttime
-	while (i < all->n_philos)	  // launch all philos
+	all->start_time = get_time();
+	while (i < all->n_philos)
 	{
-		all->philo[i].last_supper = all->start_time;	// set start time as last_supper
-		if (pthread_create(&all->philo[i].thread, NULL, // creating thread. Launch routine with passing ptr to philo from mainStruct
-						   &routine, &all->philo[i]))
+		all->philo[i].last_supper = all->start_time;
+		if (pthread_create(&all->philo[i].thread, NULL,
+				&routine, &all->philo[i]))
 		{
-			write(2, "error while pthread_create\n", 26); // cleaning up everything if fail pthreadCreate
+			write(2, "error while pthread_create\n", 26);
 			pthread_mutex_lock(&all->voice);
-			all->game_over = 1; // setGameover
+			all->game_over = 1;
 			pthread_mutex_unlock(&all->voice);
 			return (0);
 		}
 		i++;
 	}
-	check_death(all); // checking death. So that's what main routine doing
+	check_death(all);
 	return (1);
 }

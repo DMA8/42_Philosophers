@@ -6,16 +6,16 @@
 /*   By: syolando <syolando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 20:33:22 by syolando          #+#    #+#             */
-/*   Updated: 2022/06/19 21:02:48 by syolando         ###   ########.fr       */
+/*   Updated: 2022/06/28 02:56:38 by syolando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-static int arguments_checker(int argc, char **argv)
+static int	arguments_checker(int argc, char **argv)
 {
-	size_t i;
-	int tmp;
+	size_t	i;
+	int		tmp;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -25,7 +25,8 @@ static int arguments_checker(int argc, char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		if (!ft_str_isdigit(argv[i]) || ft_atoi_is_overflow(argv[i], &tmp) || tmp == 0)
+		if (!ft_str_isdigit(argv[i]) || ft_atoi_is_overflow(argv[i], &tmp)
+			|| tmp == 0)
 		{
 			print_error(NULL, argv[i], NULL, EINVAL);
 			return (EXIT_FAILURE);
@@ -35,9 +36,9 @@ static int arguments_checker(int argc, char **argv)
 	return (EXIT_SUCCESS);
 }
 
-static void kill_philosophers(t_overall *data)
+static void	kill_philosophers(t_overall *data)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (i < data->n_philos)
@@ -47,7 +48,7 @@ static void kill_philosophers(t_overall *data)
 	}
 }
 
-static void free_data(t_overall *data)
+static void	free_data(t_overall *data)
 {
 	free(data->pid_philo);
 	if (sem_close(data->forks))
@@ -60,9 +61,9 @@ static void free_data(t_overall *data)
 		print_error("sem_close: ", NULL, NULL, EINVAL);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_overall data;
+	t_overall	data;
 
 	if (arguments_checker(argc, argv) == EXIT_FAILURE)
 		return (EXIT_FAILURE);

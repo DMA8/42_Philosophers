@@ -6,7 +6,7 @@
 /*   By: syolando <syolando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 00:21:16 by syolando          #+#    #+#             */
-/*   Updated: 2022/05/21 00:32:04 by syolando         ###   ########.fr       */
+/*   Updated: 2022/06/28 02:41:07 by syolando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static int	validate_parameter(char *inp)
 int	validate_inputs(int argc, char **argv)
 {
 	int	i;
+
 	if (argc < 5 || argc > 6)
 		return (0);
 	i = 1;

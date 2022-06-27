@@ -6,15 +6,15 @@
 /*   By: syolando <syolando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 20:37:12 by syolando          #+#    #+#             */
-/*   Updated: 2022/06/19 21:04:47 by syolando         ###   ########.fr       */
+/*   Updated: 2022/06/28 02:52:05 by syolando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void *death_checker(void *arg)
+void	*death_checker(void *arg)
 {
-	t_overall *all;
+	t_overall	*all;
 
 	all = arg;
 	while (1)
@@ -32,10 +32,10 @@ void *death_checker(void *arg)
 	return (NULL);
 }
 
-void *repletion_checker(void *arg)
+void	*repletion_checker(void *arg)
 {
-	t_overall *data;
-	size_t i;
+	t_overall	*data;
+	size_t		i;
 
 	data = arg;
 	i = 0;
@@ -51,7 +51,7 @@ void *repletion_checker(void *arg)
 	return (NULL);
 }
 
-void act(t_overall *data, int action)
+void	act(t_overall *data, int action)
 {
 	sem_wait(data->speak);
 	sem_wait(data->philo.rights);
@@ -75,7 +75,7 @@ void act(t_overall *data, int action)
 	sem_post(data->speak);
 }
 
-static void *routine(t_overall *data)
+static void	*routine(t_overall *data)
 {
 	if (data->philo.number > data->n_philos / 2L)
 		my_sleep(data->time_to_eat / 2L, data);
@@ -96,26 +96,26 @@ static void *routine(t_overall *data)
 	return (NULL);
 }
 
-int start_philosopher(t_overall *data)
+int	start_philosopher(t_overall *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	data->start_time = get_time();
 	while (i < (int)data->n_philos)
 	{
-		data->philo.number = i + 1;	 // не нужно хранить все индексы. Так как этот индекс уйдет каждый раз уникальным в дочерние процессы (философы)
-		data->pid_philo[i] = fork(); // создаем дочерний процесс. Если fork не удался - закрываемся
+		data->philo.number = i + 1;
+		data->pid_philo[i] = fork();
 		if (data->pid_philo[i] == -1)
 		{
 			print_error("fork: ", NULL, NULL, errno);
 			while (--i >= 0)
-				kill(data->pid_philo[i], SIGKILL); //убиваем процессы
+				kill(data->pid_philo[i], SIGKILL);
 			return (EXIT_FAILURE);
 		}
-		else if (data->pid_philo[i] == 0) // если в дочернем в процессе
+		else if (data->pid_philo[i] == 0)
 		{
-			init_philo(data); //
+			init_philo(data);
 			routine(data);
 		}
 		i++;

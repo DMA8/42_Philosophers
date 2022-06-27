@@ -6,7 +6,7 @@
 /*   By: syolando <syolando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 22:39:43 by syolando          #+#    #+#             */
-/*   Updated: 2022/06/19 21:13:05 by syolando         ###   ########.fr       */
+/*   Updated: 2022/06/28 02:43:37 by syolando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	free_all(t_overall *data)
 int	main(int argc, char **argv)
 {
 	t_overall	all;
-	
+
 	if (!validate_inputs(argc, argv))
 	{
 		write(2, "bad input\n", 10);
